@@ -2,28 +2,21 @@ from bs4 import BeautifulSoup
 import requests
 
 
-# url = ''
-# page = requests.get(url)
+class vtt:
 
-html_doc = """
-<html><head><title>The Dormouse's story</title></head>
-<body>
-<p class="title"><b>The Dormouse's story</b></p>
+    def __init__(self, modele, url):
+        self.modele = modele
+        self.url = url
 
-<p class="story">Once upon a time there were three little sisters; and their names were
-<a href="http://example.com/elsie" class="sister" id="link1">Elsie</a>,
-<a href="http://example.com/lacie" class="sister" id="link2">Lacie</a> and
-<a href="http://example.com/tillie" class="sister" id="link3">Tillie</a>;
-and they lived at the bottom of a well.</p>
+# Canyon Spectral AL 6
+spectral_AL_06 = vtt('Spectral AL 06, 2020', 'https://www.canyon.com/en-fr/mountain-bikes/trail-bikes/spectral/spectral-al-6.0/2230.html?dwvar_2230_pv_rahmengroesse=XL&dwvar_2230_pv_rahmenfarbe=RD' )
 
-<p class="story">...</p>
-"""
+#print(spectral_AL_06.modele)
+velos = [spectral_AL_06]
 
-soup = BeautifulSoup(html_doc, 'html.parser')
-# soup = BeautifulSoup(page, 'html.parser')
+for velo in velos:
+    page = requests.get(velo.url)
+    soup = BeautifulSoup(page.content, 'html.parser')
+    data = soup.find(class_="productDescription__addToCartPrice xlt-pdpPrice").get_text()
 
-#print(soup.prettify())
-
-urls = soup.find_all('a')
-
-print(urls)
+print(data)
