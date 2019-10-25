@@ -61,10 +61,11 @@ velos =  velos_canyon+velos_yt
 
 resultat = []
 for velo in velos:
-    resultat += 'Le '+velo.modele+'est à '+velo.prix_actuel+'au lieu de '+velo.prix_initial+'. Réduction de :'+
+    #reduction = velo.prix_initial-velo.prix_actuel
+    resultat = resultat + ''.join('Le '+ velo.modele +'est à '+ velo.prix_actuel +'€ au lieu de '+ velo.prix_initial +'€. Réduction de :€')
 
 #print(jeffsy_AL_27.prix_actuel)
-
+print(resultat)
 # Redaction du mail
 
 message = ""
