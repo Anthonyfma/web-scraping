@@ -6,7 +6,7 @@ import smtplib, ssl
 port = 465  # For SSL
 password = '1bb*1e0Cc'
 # Create a secure SSL context
-context = ssl.create_default_context()
+# context = ssl.create_default_context()
 sender_email = "anthony.voilque.developpement@gmail.com"
 receiver_email = "anthony.voilque@gmail.com"
 
@@ -23,53 +23,84 @@ class vtt:
 
 
 # Canyon Spectral AL 6
-spectral_AL_6 = vtt('Spectral AL 6.0, 2020', '2,499 €',' ', 'https://www.canyon.com/en-fr/mountain-bikes/trail-bikes/spectral/spectral-al-6.0/2230.html?dwvar_2230_pv_rahmengroesse=XL&dwvar_2230_pv_rahmenfarbe=RD' )
+spectral_AL_6 = vtt('Spectral AL 6.0', 2499,'', 'https://www.canyon.com/en-fr/mountain-bikes/trail-bikes/spectral/spectral-al-6.0/2230.html?dwvar_2230_pv_rahmengroesse=XL&dwvar_2230_pv_rahmenfarbe=RD' )
 
 # Canyon Spectral AL 5
-spectral_CF_7 = vtt('Spectral CF 7.0, 2020', '2,999 €',' ', 'https://www.canyon.com/fr-fr/mountain-bikes/trail-bikes/spectral/spectral-cf-7.0/2231.html?dwvar_2231_pv_rahmengroesse=S&dwvar_2231_pv_rahmenfarbe=BK' )
+spectral_CF_7 = vtt('Spectral CF 7.0', 2999,'', 'https://www.canyon.com/fr-fr/mountain-bikes/trail-bikes/spectral/spectral-cf-7.0/2231.html?dwvar_2231_pv_rahmengroesse=S&dwvar_2231_pv_rahmenfarbe=BK' )
 
 # Canyon Spectral CF 7
-spectral_CF_8 = vtt('Spectral CF 8.0, 2020','3,499 €',' ', 'https://www.canyon.com/fr-fr/mountain-bikes/trail-bikes/spectral/spectral-cf-8.0/2232.html?dwvar_2232_pv_rahmenfarbe=BN&dwvar_2232_pv_rahmengroesse=M' )
+spectral_CF_8 = vtt('Spectral CF 8.0',3499,'', 'https://www.canyon.com/fr-fr/mountain-bikes/trail-bikes/spectral/spectral-cf-8.0/2232.html?dwvar_2232_pv_rahmenfarbe=BN&dwvar_2232_pv_rahmengroesse=M' )
 velos_canyon = [spectral_AL_6,spectral_CF_7,spectral_CF_8]
 
 
 # Jeffsy AL 27.5
-jeffsy_AL_27 = vtt('Jeffsy AL 27.5, 2020', '2,299 €',' ', 'https://www.yt-industries.com/en/detail/index/sArticle/2114/sCategory/509' )
+jeffsy_AL_27 = vtt('Jeffsy AL 27.5', 2299,'', 'https://www.yt-industries.com/fr/detail/index/sArticle/2114/sCategory/509' )
 
 # Jeffsy AL 29
-jeffsy_AL_29= vtt('JEFFSY 27 CF COMP, 2020', '2,299 €',' ', 'https://www.yt-industries.com/en/detail/index/sArticle/2122/sCategory/509' )
+jeffsy_AL_29= vtt('JEFFSY 27 CF COMP', 2299,'', 'https://www.yt-industries.com/fr/detail/index/sArticle/2122/sCategory/509' )
 
 # Jeffsy CF 27.5
-jeffsy_CF_27 = vtt('JEFFSY 27.5 CF, 2020', '3,299 €',' ', 'https://www.yt-industries.com/en/detail/index/sArticle/2112/sCategory/509' )
+jeffsy_CF_27 = vtt('JEFFSY 27.5 CF', 3299,'', 'https://www.yt-industries.com/fr/detail/index/sArticle/2112/sCategory/509' )
 
 # Jeffsy CF 29
-jeffsy_CF_29 = vtt('JEFFSY 29 CF COMP, 2020', '3,299 €',' ', 'https://www.yt-industries.com/en/detail/index/sArticle/2120/sCategory/509' )
+jeffsy_CF_29 = vtt('JEFFSY 29 CF COMP', 3299,' ', 'https://www.yt-industries.com/fr/detail/index/sArticle/2120/sCategory/509' )
 velos_yt = [jeffsy_AL_27, jeffsy_AL_29, jeffsy_CF_27, jeffsy_CF_29]
 
 
 for velo in velos_canyon:
     page = requests.get(velo.url)
     soup = BeautifulSoup(page.content, 'html.parser')
-    velo.prix_actuel = soup.find(class_="productDescription__addToCartPrice xlt-pdpPrice").get_text()
+    velo.prix_actuel = soup.find(class_="productDescription__addToCartPrice xlt-pdpPrice").get_text().strip().replace('.','').replace(',00 €','')
 
 for velo in velos_yt:
     page = requests.get(velo.url)
     soup = BeautifulSoup(page.content, 'html.parser')
-    velo.prix_actuel = soup.find(class_="price price-large price-default text-right").get_text()
+    velo.prix_actuel = soup.find(class_="price price-large price-default text-right").get_text().strip().replace(',00  €','')
 
 velos =  velos_canyon+velos_yt
-
+# resultat = [str(jeffsy_AL_27.modele)+'blabla\n']
+# resultat += ['tararararara']
 resultat = []
 for velo in velos:
     #reduction = velo.prix_initial-velo.prix_actuel
-    resultat = resultat + ''.join('Le '+ velo.modele +'est à '+ velo.prix_actuel +'€ au lieu de '+ velo.prix_initial +'€. Réduction de :€')
+    resultat += ['Le '+ str(velo.modele) +' est à '+ str(velo.prix_actuel) +' € au lieu de '+ str(velo.prix_initial) +' €\n']
 
-#print(jeffsy_AL_27.prix_actuel)
-print(resultat)
+# print(int(jeffsy_AL_27.prix_actuel))
+message3= ''.join(resultat)
+print(message3)
+# print(resultat)
+# print(''.join(resultat))
 # Redaction du mail
 
-message = ""
+message = """\
+From: %s
+To: %s
+Subject: MAJ promo vélos
+
+
+qmlskdfjqmlskdjfmlqskjdfmlqjsdm
+
+""" % (sender_email, receiver_email)
+
+message2 = 'lskdj\n'+jeffsy_AL_27.modele
+
+
+# print(message)
 # Envoie du mail
-#with smtplib.SMTP_SSL("smtp.gmail.com", port, context=context) as server:
-    #server.login("anthony.voilque.developpement@gmail.com", password)
-    #server.sendmail(sender_email, receiver_email, message)
+# try:
+#     server = smtplib.SMTP("smtp.gmail.com", 587)
+#     # server.login("anthony.voilque.developpement@gmail.com", password)
+#     # server.sendmail(sender_email, receiver_email, message)
+#     server.ehlo()
+#     server.starttls() #connectipon sécurisée
+#     server.login(sender_email, password)
+#     server.sendmail(sender_email, receiver_email, message2)
+# except:
+#     print ('Something went wrong...')
+
+
+
+
+# with smtplib.SMTP_SSL("smtp.gmail.com", port, context=context) as server:
+#     server.login("anthony.voilque.developpement@gmail.com", password)
+#     server.sendmail(sender_email, receiver_email, message)
