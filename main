@@ -49,8 +49,19 @@ velos_yt = [jeffsy_AL_27, jeffsy_AL_29, jeffsy_CF_27, jeffsy_CF_29]
 
 velos =  velos_canyon+velos_yt
 
-bilan_prix = []
 flag_promo = False
+for velo in velos_canyon:
+    # Récupération prix
+    page = requests.get(velo.url)
+    soup = BeautifulSoup(page.content, 'html.parser')
+    velo.prix_actuel = int(soup.find(class_="productDescription__addToCartPrice xlt-pdpPrice").get_text().strip().replace(',00 €','').replace('.',''))
+
+    promo = velo.prix_initial - velo.prix_actuel
+    velo.bilan = '- Le '+ str(velo.modele) +' est à '+ str(velo.prix_actuel) +' € au lieu de '+ str(velo.prix_initial) +' €.\t Promo de:'+ str(promo)+ ' €.\n'
+    if promo != 0:
+        flag_promo = True
+    print(velo.prix_actuel)
+
 for velo in velos_yt:
     # Récupération prix
     page = requests.get(velo.url)
@@ -59,8 +70,6 @@ for velo in velos_yt:
 
     promo = velo.prix_initial - velo.prix_actuel
     velo.bilan = '- Le '+ str(velo.modele) +' est à '+ str(velo.prix_actuel) +' € au lieu de '+ str(velo.prix_initial) +' €.\t Promo de:'+ str(promo)+ ' €.\n'
-    #message.add('- Le '+ str(velo.modele) +' est à '+ str(velo.prix_actuel) +' € au lieu de '+ str(velo.prix_initial) +' €.\t Promo de:'+ str(promo)+ ' €.\n')
-    #bilan_prix += ['Le '+ str(velo.modele) +' est à '+ str(velo.prix_actuel) +' € au lieu de '+ str(velo.prix_initial) +' €.\t Promo de:'+ str(promo)+ ' €.\n']
     if promo != 0:
         flag_promo = True
 
